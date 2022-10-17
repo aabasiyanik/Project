@@ -160,26 +160,14 @@ public class MyProducts implements Product {
     @Override
     public void searchProducts() {
         System.out.println("Enter the name of the product you want to search from the list:");
-        try {
-            String name = input.nextLine();
-            MyProducts searchProduct = productsList.stream().filter(p -> p.name.equalsIgnoreCase(name)).findAny().get();
-            System.out.println("Your product has been found!");
-            System.out.println("\nName: " + searchProduct.name +
-                    "\nCategory: " + searchProduct.cate +
-                    "\nType: " + searchProduct.type +
-                    "\nPrice: " + searchProduct.price +
-                    "\nExpiration Date: " + searchProduct.expirationDate +
-                    "\nStatus: " + searchProduct.etac + "\n");
-            System.out.println();
-            System.out.println("1. Search Another Product\n2. Return to the Main Menu");
-            int whatNext = input.nextInt();
-            input.nextLine();
-            if (whatNext == 1) {
-                this.searchProducts();
-            } else {
-                this.start();
+        String name = input.nextLine();
+        ArrayList<MyProducts> searchProduct = new ArrayList<>();
+        for (MyProducts num : productsList){
+            if (num.name.equalsIgnoreCase(name)){
+                searchProduct.add(num);
             }
-        } catch (Exception exception) {
+        }
+        if (searchProduct.size() == 0){
             System.out.println("No product is found!");
             System.out.println();
             System.out.println("1. Try Again\n2. Return to the Main Menu");
@@ -191,6 +179,55 @@ public class MyProducts implements Product {
                 this.start();
             }
         }
+        for (MyProducts num2 : searchProduct){
+            System.out.println("\nName: " + num2.name +
+                    "\nCategory: " + num2.cate +
+                    "\nType: " + num2.type +
+                    "\nPrice: " + num2.price +
+                    "\nExpiration Date: " + num2.expirationDate +
+                    "\nStatus: " + num2.etac + "\n");
+        }
+        System.out.println();
+        System.out.println("1. Search Another Product\n2. Return to the Main Menu");
+        int whatNext = input.nextInt();
+        input.nextLine();
+        if (whatNext == 1) {
+            this.searchProducts();
+        } else {
+            this.start();
+        }
+
+//        try {
+//            String name = input.nextLine();
+//            MyProducts searchProduct = productsList.stream().filter(p -> p.name.equalsIgnoreCase(name)).findAny().get();
+//            System.out.println("Your product has been found!");
+//            System.out.println("\nName: " + searchProduct.name +
+//                    "\nCategory: " + searchProduct.cate +
+//                    "\nType: " + searchProduct.type +
+//                    "\nPrice: " + searchProduct.price +
+//                    "\nExpiration Date: " + searchProduct.expirationDate +
+//                    "\nStatus: " + searchProduct.etac + "\n");
+//            System.out.println();
+//            System.out.println("1. Search Another Product\n2. Return to the Main Menu");
+//            int whatNext = input.nextInt();
+//            input.nextLine();
+//            if (whatNext == 1) {
+//                this.searchProducts();
+//            } else {
+//                this.start();
+//            }
+//        } catch (Exception exception) {
+//            System.out.println("No product is found!");
+//            System.out.println();
+//            System.out.println("1. Try Again\n2. Return to the Main Menu");
+//            int whatNext = input.nextInt();
+//            input.nextLine();
+//            if (whatNext == 1) {
+//                this.searchProducts();
+//            } else {
+//                this.start();
+//            }
+//        }
     }
 
     @Override
@@ -207,7 +244,7 @@ public class MyProducts implements Product {
             case 1:
                 for (MyProducts num : productsList) {
                     if (num.cate == Categories.Fruits) {
-                        listShow.removeIf(num2 -> num2.name.equals(num.name));
+                        listShow.removeIf(num2 -> num2.name.equalsIgnoreCase(num.name));
                         listShow.add(num);
                     }
                 }
