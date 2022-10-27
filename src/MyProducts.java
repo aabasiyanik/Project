@@ -239,7 +239,7 @@ public class MyProducts implements Product {
         } while (isNotEqualToInStoreSoldOut);
 
         Status stat = et == 1 ? Status.In_Store :
-                category == 2 ? Status.Sold_Out :
+                et == 2 ? Status.Sold_Out :
                         null;
 
         MyProducts product = new MyProducts(cate, name, type, price, expirationDate, stat);
@@ -287,21 +287,33 @@ public class MyProducts implements Product {
             }
         }
         if (searchProduct.size() == 0) {
-            clearScreen();
-            System.out.println("No product is found!");
-            System.out.println();
-            System.out.println("1. Try Again\n2. Return to the Main Menu");
-            int whatNext = input.nextInt();
-            input.nextLine();
-            clearScreen();
-            if (whatNext == 1) {
-                this.searchProducts();
-            } else {
-                this.start();
-            }
+            int whatNext;
+            boolean WhatNext = true;
+            do {
+                try {
+                    clearScreen();
+                    System.out.println("No product is found!");
+                    System.out.println();
+                    System.out.println("1. Try Again\n2. Return to the Main Menu");
+                    whatNext = input.nextInt();
+                    input.nextLine();
+                    clearScreen();
+
+                    if (whatNext == 1) {
+                        this.searchProducts();
+                    } else {
+                        this.start();
+                    }
+                    WhatNext = false;
+                } catch (Exception exception) {
+                    input.next();
+                    clearScreen();
+                    System.out.println("Please try entering 1 or 2");
+                }
+            } while (WhatNext);
         }
+        clearScreen();
         for (MyProducts num2 : searchProduct) {
-            clearScreen();
             calendar.add(Calendar.DATE, num2.expirationDate);
             System.out.println("Your product has been found!");
             System.out.println("\nName: " + num2.name +
@@ -310,16 +322,29 @@ public class MyProducts implements Product {
                     "\nPrice: $" + num2.price +
                     "\nExpiration Date: " + date.format(calendar.getTime()) +
                     "\nStatus: " + num2.stat + "\n");
+            calendar = Calendar.getInstance();
         }
-        System.out.println("1. Search Another Product\n2. Return to the Main Menu");
-        int whatNext = input.nextInt();
-        input.nextLine();
-        clearScreen();
-        if (whatNext == 1) {
-            this.searchProducts();
-        } else {
-            this.start();
-        }
+        int whatNext;
+        boolean WhatNext = true;
+        do {
+            try {
+                System.out.println("1. Search Another Product\n2. Return to the Main Menu");
+                whatNext = input.nextInt();
+                input.nextLine();
+                clearScreen();
+
+                if (whatNext == 1) {
+                    this.searchProducts();
+                } else {
+                    this.start();
+                }
+                WhatNext = false;
+            } catch (Exception exception) {
+                input.next();
+                clearScreen();
+                System.out.println("Please try entering 1 or 2");
+            }
+        } while (WhatNext);
 
 //        try {
 //            String name = input.nextLine();
@@ -356,13 +381,35 @@ public class MyProducts implements Product {
 
     @Override
     public void listProducts() {
-        System.out.println("Choose from the categories:\n" +
-                "1. Fruits\n" +
-                "2. Sea Foods\n" +
-                "3. Baked Goods\n" +
-                "4. Frozen Foods");
-        int listScan = input.nextInt();
-        input.nextLine();
+        boolean isNot = true;
+        int listScan =0;
+        do {
+            try {
+                System.out.println("Choose from the categories:\n" +
+                        "1. Fruits\n" +
+                        "2. Sea Foods\n" +
+                        "3. Baked Goods\n" +
+                        "4. Frozen Foods");
+                listScan = input.nextInt();
+                while (listScan < 1 || listScan > 4) {
+                    clearScreen();
+                    System.out.println("Your number has has to be between 1 and 4");
+                    System.out.println("Choose from the categories:\n" +
+                            "1. Fruits\n" +
+                            "2. Sea Foods\n" +
+                            "3. Baked Goods\n" +
+                            "4. Frozen Foods");
+                    listScan = input.nextInt();
+                    input.nextLine();
+                }
+                isNot = false;
+            } catch (Exception exception) {
+                input.next();
+                clearScreen();
+                System.out.println("Please try entering an integer");
+            }
+        } while (isNot);
+
         ArrayList<MyProducts> listShow = new ArrayList<>();
         switch (listScan) {
             case 1:
@@ -400,13 +447,35 @@ public class MyProducts implements Product {
             default:
         }
         if (listShow.size() > 0) {
-            clearScreen();
-            System.out.println("Choose one of the product/s to learn more about it");
-            for (int i = 0; i < listShow.size(); i++) {
-                System.out.println((i + 1) + ". " + listShow.get(i).name);
-            }
-            int numb = input.nextInt();
-            input.nextLine();
+            boolean notInRange = true;
+            int numb = 0;
+            do {
+                try {
+                    clearScreen();
+                    System.out.println("Choose one of the product/s to learn more about it");
+                    for (int i = 0; i < listShow.size(); i++) {
+                        System.out.println((i + 1) + ". " + listShow.get(i).name);
+                    }
+                    numb = input.nextInt();
+                    input.nextLine();
+                    while (listShow.size() < numb || 1 > numb){
+                        clearScreen();
+                        System.out.println("Your number has has to be between 1 and " + listShow.size());
+                        System.out.println("Choose one of the product/s to learn more about it");
+                        for (int i = 0; i < listShow.size(); i++) {
+                            System.out.println((i + 1) + ". " + listShow.get(i).name);
+                        }
+                        numb = input.nextInt();
+                        input.nextLine();
+                    }
+                    notInRange = false;
+                }catch (Exception exception){
+                    input.next();
+                    clearScreen();
+                    System.out.println("Please try entering an integer");
+                }
+            }while(notInRange);
+
             String name = listShow.get(numb - 1).name;
             ArrayList<MyProducts> sameName = new ArrayList<>();
             for (MyProducts product : productsList) {
@@ -414,8 +483,9 @@ public class MyProducts implements Product {
                     sameName.add(product);
                 }
             }
+            clearScreen();
             for (MyProducts sameN : sameName) {
-                clearScreen();
+                calendar.add(Calendar.DATE, sameN.expirationDate);
                 System.out.println("Your product has been found!");
                 System.out.println("\nName: " + sameN.name +
                         "\nCategory: " + sameN.cate +
@@ -423,29 +493,54 @@ public class MyProducts implements Product {
                         "\nPrice: $" + sameN.price +
                         "\nExpiration Date: " + date.format(calendar.getTime()) +
                         "\nStatus: " + sameN.stat + "\n");
+                calendar = Calendar.getInstance();
             }
-            System.out.println("1. List Another Category\n2. Return to the Main Menu");
-            int whatNext = input.nextInt();
-            input.nextLine();
-            clearScreen();
-            if (whatNext == 1) {
-                this.listProducts();
-            } else {
-                this.start();
-            }
+            int whatNext;
+            boolean WhatNext = true;
+            do {
+                try {
+                    System.out.println("1. List Another Category\n2. Return to the Main Menu");
+                    whatNext = input.nextInt();
+                    input.nextLine();
+                    clearScreen();
+
+                    if (whatNext == 1) {
+                        this.listProducts();
+                    } else {
+                        this.start();
+                    }
+                    WhatNext = false;
+                } catch (Exception exception) {
+                    input.next();
+                    clearScreen();
+                    System.out.println("Please try entering 1 or 2");
+                }
+            } while (WhatNext);
+
         } else {
-            clearScreen();
-            System.out.println("Sorry, there are no products to list in this category.");
-            System.out.println();
-            System.out.println("1. Try Again\n2. Return to the Main Menu");
-            int whatNext = input.nextInt();
-            input.nextLine();
-            clearScreen();
-            if (whatNext == 1) {
-                this.listProducts();
-            } else {
-                this.start();
-            }
+            int whatNext;
+            boolean WhatNext = true;
+            do {
+                try {
+                    clearScreen();
+                    System.out.println("Sorry, there are no products to list in this category.");
+                    System.out.println();
+                    System.out.println("1. Try Again\n2. Return to the Main Menu");
+                    whatNext = input.nextInt();
+                    input.nextLine();
+                    clearScreen();
+                    if (whatNext == 1) {
+                        this.listProducts();
+                    } else {
+                        this.start();
+                    }
+                    WhatNext = false;
+                } catch (Exception exception) {
+                    input.next();
+                    clearScreen();
+                    System.out.println("Please try entering 1 or 2");
+                }
+            } while (WhatNext);
         }
     }
 
