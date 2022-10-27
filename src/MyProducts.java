@@ -1,6 +1,9 @@
+import java.text.*;
 import java.util.*;
 
 public class MyProducts implements Product {
+    DateFormat date = new SimpleDateFormat("MM/dd/yyyy");
+    Calendar calendar = Calendar.getInstance();
     static Scanner input = new Scanner(System.in);
 
     public void start() {
@@ -299,12 +302,13 @@ public class MyProducts implements Product {
         }
         for (MyProducts num2 : searchProduct) {
             clearScreen();
+            calendar.add(Calendar.DATE, num2.expirationDate);
             System.out.println("Your product has been found!");
             System.out.println("\nName: " + num2.name +
                     "\nCategory: " + num2.cate +
                     "\nType: " + num2.type +
-                    "\nPrice: " + num2.price +
-                    "\nExpiration Date: " + num2.expirationDate +
+                    "\nPrice: $" + num2.price +
+                    "\nExpiration Date: " + date.format(calendar.getTime()) +
                     "\nStatus: " + num2.stat + "\n");
         }
         System.out.println("1. Search Another Product\n2. Return to the Main Menu");
@@ -416,8 +420,8 @@ public class MyProducts implements Product {
                 System.out.println("\nName: " + sameN.name +
                         "\nCategory: " + sameN.cate +
                         "\nType: " + sameN.type +
-                        "\nPrice: " + sameN.price +
-                        "\nExpiration Date: " + sameN.expirationDate +
+                        "\nPrice: $" + sameN.price +
+                        "\nExpiration Date: " + date.format(calendar.getTime()) +
                         "\nStatus: " + sameN.stat + "\n");
             }
             System.out.println("1. List Another Category\n2. Return to the Main Menu");
